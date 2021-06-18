@@ -1,0 +1,18 @@
+[package]
+name = "rust-playground"
+authors = ["Hunter Wilhelm <zicy@zicy.net>"]
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+
+[[bin]]
+name = "hello-world"
+path = "src/hello-world.rs"
+
+[[bin]]
+name = "binary-tree"
+path = "src/binary-tree.rs"
