@@ -155,6 +155,11 @@ fn display_history(history: &mut Vec<HistoryItem>) {
 
 /// Does the calculation as is displayed
 fn display_result(history: &mut Vec<HistoryItem>) {
+    print!("Result: ");
+    if history.len() == 0 {
+        println!();
+        return;
+    }
     let sliced_history = &history[1..];
     let mut result;
     result = &history[0].value + 0.0;
@@ -167,7 +172,7 @@ fn display_result(history: &mut Vec<HistoryItem>) {
             Operation::Invalid => result,
         };
     }
-    println!("Result: {}", result);
+    println!("{}", result);
 }
 
 /// Puts an operation and value into the history
@@ -192,13 +197,13 @@ struct HistoryItem {
 }
 
 /// My Calculator
-/// 
+///
 /// This calculator goes to show that most calculators, like this one, do not have
 /// order of operations, rather they mutate the result one operation at a time.
-/// 
+///
 /// This does have one extra feature that most basic calculators don't have: undo.
-/// 
-/// The instructions will be shown on screen. 
+///
+/// The instructions will be shown on screen.
 fn main() {
     println!("My Calculator");
     let mut history: Vec<HistoryItem> = Vec::new();
