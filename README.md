@@ -11,7 +11,7 @@ order of operations, rather they mutate the result one operation at a time.
 This does have one extra feature that most basic calculators don't have: undo.
 The instructions will be shown on screen.
 
-[Overview video](https://youtu.be)
+[Overview video](https://youtu.be/qPufl3Loyj4)
 
 ### How to use this calculator
 When it first starts it shows
