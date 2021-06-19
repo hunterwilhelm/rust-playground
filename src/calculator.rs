@@ -1,5 +1,7 @@
 use std::io;
 
+/// The user can tell the program what to do
+/// The program communicates using these instead of chars
 enum Instruction {
     Quit,
     EnterOperation,
@@ -7,6 +9,8 @@ enum Instruction {
     Invalid,
 }
 
+/// The user can tell the program what to do with each number
+/// The program communicates using these instead of chars
 enum Operation {
     Add,
     Multiply,
@@ -15,6 +19,7 @@ enum Operation {
     Invalid,
 }
 
+/// Gets the user input as a string
 fn read_user_input() -> String {
     // mutable variable
     let mut input = String::new();
@@ -28,13 +33,16 @@ fn read_user_input() -> String {
 /// Gets an int from a user by checking it
 fn get_user_instruction() -> Instruction {
     println!("Enter a command to continue");
-    println!(" - e to enter an integer");
+    println!(" - e to enter a number");
     println!(" - u to undo");
     println!(" - q to quit");
     loop {
         let input_str = read_user_input();
         if input_str.len() > 0 {
+            // just get the first char
             let c = input_str.chars().nth(0).unwrap();
+
+            // map the instruction to the enum
             let instruction: Instruction = match c {
                 'e' => Instruction::EnterOperation,
                 'u' => Instruction::Undo,
@@ -56,7 +64,10 @@ fn get_user_operation() -> Operation {
     loop {
         let input_str = read_user_input();
         if input_str.len() > 0 {
+            // just get the first char
             let c = input_str.chars().nth(0).unwrap();
+
+            // map the input to the enum
             let operation: Operation = match c {
                 '+' => Operation::Add,
                 '-' => Operation::Subtract,
@@ -73,15 +84,14 @@ fn get_user_operation() -> Operation {
     }
 }
 
-/// Gets an int from a user by checking it
+/// Gets a number from a user by checking it
 fn get_user_number() -> f32 {
     // by default mutable variable
     let user_float: f32;
 
     loop {
-        println!("Enter an int");
+        println!("Enter a number");
 
-        // read user input
         let input_str = read_user_input();
         let input = input_str.trim().parse::<f32>();
 
@@ -99,18 +109,18 @@ fn get_user_number() -> f32 {
     return user_float;
 }
 
+/// takes the instruction enum and mutates the history
 fn execute_instruction(instruction: Instruction, history: &mut Vec<HistoryItem>) -> bool {
     match instruction {
-        Instruction::EnterOperation => enter_integer(history),
+        Instruction::EnterOperation => enter_number(history),
         Instruction::Undo => undo(history),
         Instruction::Quit => return false,
         _ => (),
     }
-    display_history(history);
-    display_result(history);
     return true;
 }
 
+/// removes the last element of the history
 fn undo(history: &mut Vec<HistoryItem>) {
     if history.len() == 0 {
         println!("Cannot undo since the tree is empty");
@@ -119,6 +129,7 @@ fn undo(history: &mut Vec<HistoryItem>) {
     }
 }
 
+/// converts the enum back to the char to display the operation
 fn get_char_from_operation(operation: &Operation) -> char {
     match operation {
         Operation::Add => '+',
@@ -129,6 +140,7 @@ fn get_char_from_operation(operation: &Operation) -> char {
     }
 }
 
+/// displays the history so we can see what is going on
 fn display_history(history: &mut Vec<HistoryItem>) {
     print!("Stack: ");
     let length = history.len();
@@ -141,6 +153,7 @@ fn display_history(history: &mut Vec<HistoryItem>) {
     println!();
 }
 
+/// Does the calculation as is displayed
 fn display_result(history: &mut Vec<HistoryItem>) {
     let sliced_history = &history[1..];
     let mut result;
@@ -151,14 +164,14 @@ fn display_result(history: &mut Vec<HistoryItem>) {
             Operation::Subtract => result - h.value,
             Operation::Divide => result / h.value,
             Operation::Multiply => result * h.value,
-            Operation::Invalid => result
+            Operation::Invalid => result,
         };
     }
     println!("Result: {}", result);
-
 }
 
-fn enter_integer(history: &mut Vec<HistoryItem>) {
+/// Puts an operation and value into the history
+fn enter_number(history: &mut Vec<HistoryItem>) {
     let operation = if history.len() > 0 {
         get_user_operation()
     } else {
@@ -172,18 +185,29 @@ fn enter_integer(history: &mut Vec<HistoryItem>) {
     });
 }
 
+/// value and operation go together in one struct for better structure and integrity
 struct HistoryItem {
     value: f32,
     operation: Operation,
 }
 
+/// My Calculator
+/// 
+/// This calculator goes to show that most calculators, like this one, do not have
+/// order of operations, rather they mutate the result one operation at a time.
+/// 
+/// This does have one extra feature that most basic calculators don't have: undo.
+/// 
+/// The instructions will be shown on screen. 
 fn main() {
-    println!("Binary tree");
+    println!("My Calculator");
     let mut history: Vec<HistoryItem> = Vec::new();
     loop {
         let instruction = get_user_instruction();
         if !execute_instruction(instruction, &mut history) {
             break;
         }
+        display_history(&mut history);
+        display_result(&mut history);
     }
 }
